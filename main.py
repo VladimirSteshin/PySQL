@@ -12,7 +12,24 @@ def keys():
     return key_storage
 
 
+def user_task(task=input('Input command: ').lower()):
+    tasks = ['add_person', 'add_phone', 'data_update', 'del_phone', 'del_person', 'find_person', 'exit']
+    while True:
+        if task not in tasks:
+            print('Wrong command! Try again.')
+            return user_task(task=input('Input command: ').lower())
+        elif task == 'exit':
+            return print('Have a nice day!')
+        else:
+            if task == 'add_person':
+                return tabling.add_customer(str(input('Input name: ')), str(input('Input last_name: ')))
+            elif task == 'add_phone':
+                return tabling.add_phone(str(input('Input name: ')), str(input('Input last_name: ')),
+                                         str(input('Input your telephone number: ')))
+            print('Hey')
+
+
 tabling = Customer(keys())
 tabling.create_db()
+user_task()
 tabling.shutdown()
-

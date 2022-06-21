@@ -20,10 +20,23 @@ class Customer:
                 CREATE TABLE IF NOT EXISTS communication (
                 id SERIAL PRIMARY KEY,
                 customer_id INTEGER REFERENCES customer(id),
-                email VARCHAR(60) NOT NULL,
-                telephone VARCHAR(60)
+                email VARCHAR(60),
+                phone_number VARCHAR(60)
                 );
                 """)
+
+    def add_customer(self, name, last_name):
+        self.curs.execute("""
+        INSERT INTO customer (name, last_name)
+        VALUES (%s, %s);
+        """, (name, last_name))
+        print('Customer added!')
+
+    # def add_phone(self, name, last_name, phone_number):
+    #     self.curs.execute("""
+    #     INSERT INTO communication (phone_number)
+    #
+    #     """)
 
     def shutdown(self):
         self.conn.commit()
