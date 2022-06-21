@@ -1,5 +1,5 @@
-import psycopg2
 import configparser
+from engine import Customer
 
 
 def keys():
@@ -12,5 +12,7 @@ def keys():
     return key_storage
 
 
-with psycopg2.connect(database=keys()['db_name'], user=keys()['login'], password=keys()['password']) as conn:
-    pass
+tabling = Customer(keys())
+tabling.create_db()
+tabling.shutdown()
+
