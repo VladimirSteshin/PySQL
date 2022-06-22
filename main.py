@@ -13,7 +13,7 @@ def keys():
 
 
 def user_task(task=input('Input command: ').lower()):
-    tasks = ['add_person', 'add_phone', 'data_update', 'del_phone', 'del_person', 'find_person', 'exit']
+    tasks = ['add_person', 'add_phone', 'update', 'del_phone', 'del_person', 'find', 'exit']
     while True:
         if task not in tasks:
             print('Wrong command! Try again.')
@@ -22,13 +22,11 @@ def user_task(task=input('Input command: ').lower()):
             return print('Have a nice day!')
         else:
             if task == 'add_person':
-                return tabling.add_customer(str(input('Input name: ')), str(input('Input last_name: ')))
+                return tabling.add_customer('John', 'Doe')
             elif task == 'add_phone':
-                return tabling.add_phone(str(input('Input name: ')), str(input('Input last_name: ')),
-                                         str(input('Input your telephone number: ')))
+                return tabling.add_phone('John', 'Doe', '123-45-67')
             elif task == 'update':
-                return tabling.update(str(input('Input name: ')), str(input('Input last_name: ')),
-                                      str(input('Input e-mail: ')))
+                return tabling.update('John', 'Doe', 'Jack', 'Slater', 'schwarz@big.com')
 
 
 tabling = Customer(keys())

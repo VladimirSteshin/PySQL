@@ -47,11 +47,21 @@ class Customer:
             VALUES (%s, %s);
             """, (cust_id, phone_number))
 
-    def update(self, name, last_name, email):
+    def update(self, old_name, old_last_name, new_name, new_last_name, email):
         self.curs.execute("""
-        UPDATE customer
-        SET name = (%s), last_name = (%s), email = (%s)
-        """)
+                SELECT id FROM customer
+                WHERE name = (%s) and last_name = (%s);
+                """, (old_name, old_last_name))
+        cust_id = self.curs.fetchone()
+        if cust_id is None:
+            return print('There is no such a person! Try again.')
+        else:
+            cust_id = cust_id[0]
+            self.curs.execute("""
+            UPDATE customer
+            SET name = (%s), last_name = (%s), email = (%s)
+            WHERE id = (%s);
+            """, (new_name, new_last_name, email, cust_id))
 
     def shutdown(self):
         self.conn.commit()
