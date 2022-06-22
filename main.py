@@ -26,7 +26,6 @@ def user_task(task=input('Input command: ').lower()):
             elif task == 'add_phone':
                 return tabling.add_phone(str(input('Input name: ')), str(input('Input last_name: ')),
                                          str(input('Input your telephone number: ')))
-            print('Hey')
 
 
 tabling = Customer(keys())
