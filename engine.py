@@ -47,6 +47,12 @@ class Customer:
             VALUES (%s, %s);
             """, (cust_id, phone_number))
 
+    def update(self, name, last_name, email):
+        self.curs.execute("""
+        UPDATE customer
+        SET name = (%s), last_name = (%s), email = (%s)
+        """)
+
     def shutdown(self):
         self.conn.commit()
         self.curs.close()
