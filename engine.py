@@ -110,9 +110,15 @@ class Customer:
                     """, (cust_id,))
             print('Person deleted!')
 
-    # def find(self, name, last_name, phone_number, email):
-    #     if phone_number is not None:
-    #         self.curs
+    def find(self, name, last_name, phone_number, email):
+        if phone_number is not None:
+            self.curs.execute("""
+            SELECT * FROM customer c
+            JOIN phonebook p ON c.id = p.id
+            WHERE phone_number = %s;
+            """, (phone_number,))
+        else:
+            
 
     def shutdown(self):
         self.conn.commit()
