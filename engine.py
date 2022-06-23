@@ -114,11 +114,21 @@ class Customer:
         if phone_number is not None:
             self.curs.execute("""
             SELECT * FROM customer c
-            JOIN phonebook p ON c.id = p.id
+            JOIN phonebook p ON c.id = p.customer_id
             WHERE phone_number = %s;
             """, (phone_number,))
+        elif email is not None:
+            self.curs.execute("""
+            SELECT * FROM customer
+            WHERE email = %s;
+            """, (email,))
         else:
-            
+            self.curs.execute("""
+            SELECT * FROM customer c
+            JOIN phonebook p ON c.id = p.customer_id
+            WHERE name = %s and last_name = %s;
+            """, (name, last_name))
+        print(self.curs.fetchall())
 
     def shutdown(self):
         self.conn.commit()
