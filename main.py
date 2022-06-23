@@ -1,54 +1,68 @@
-import configparser
-from engine import Customer
+import psycopg2
 
 
-def keys():
-    key_storage = {}
-    config = configparser.ConfigParser()
-    config.read("settings.ini")
-    key_storage["db_name"] = config["Admin"]["db_name"]
-    key_storage["login"] = config["Admin"]["user"]
-    key_storage["password"] = config["Admin"]["password"]
-    return key_storage
+def create_db(conn):
+    curs = conn.cursor()
+    curs.execute("""
+        CREATE TABLE IF NOT EXISTS customer (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(60) NOT NULL,
+        last_name VARCHAR (60) NOT NULL,
+        email VARCHAR(60)
+        );
+        """)
+    curs.execute("""
+        CREATE TABLE IF NOT EXISTS phonebook (
+        id SERIAL PRIMARY KEY,
+        customer_id INTEGER REFERENCES customer(id),
+        phone_number VARCHAR(60)
+        );
+        """)
+    conn.commit()
+    curs.close()
 
 
-def user_task(task=input('Input command (or "help" for the list): ').lower()):
-    tasks = ['add_person', 'add_phone', 'update', 'del_phone', 'del_person', 'find', 'exit', 'clean', 'help']
-    while True:
-        if task not in tasks:
-            print('Wrong command! Try again.')
-            return user_task(task=input('Input command (or "help" for the list): ').lower())
-        elif task == 'help':
-            print(*tasks, sep='\n')
-            return user_task(task=input('Input command (or "help" for the list): ').lower())
-
-        else:
-            if task == 'add_person':
-                return tabling.add_customer('John', 'Doe')
-            elif task == 'add_phone':
-                return tabling.add_phone('John', 'Doe', '123-45-69')
-            elif task == 'update':
-                return tabling.update('John', 'Doe', 'Jack', 'Slater', 'schwarz@big.com')
-            elif task == 'del_phone':
-                return tabling.del_phone('Jack', 'Slater', '123-45-67')
-            elif task == 'del_person':
-                return tabling.del_person('Jack', 'Slater')
-            elif task == 'find':
-                return tabling.find('John', 'Doe', None, None)
-            elif task == 'exit':
-                return print('Have a nice day!')
-            elif task == 'clean':
-                print('It will delete all data. Are you sure? Y/N and press Enter:')
-                decision = str(input()).upper()
-                if decision == 'Y':
-                    return tabling.clean_before()
-                elif decision == 'N':
-                    return print('Canceled')
-                else:
-                    print('Incorrect command.')
+def add_client(conn, first_name, last_name, email, phones=None):
+    curs = conn.cursor()
+    curs.execute("""
+            INSERT INTO customer (name, last_name, email)
+            VALUES (%s, %s, %s);
+            """, (first_name, last_name, email))
+    conn.commit()
+    curs.close()
 
 
-tabling = Customer(keys())
-tabling.create_db()
-user_task()
-tabling.shutdown()
+def add_phone(conn, client_id, phone):
+    curs = conn.cursor()
+    curs.execute("""
+    INSERT INTO phonebook (customer_id, phone_number)
+    VALUES (%s, %s);
+    """, (client_id, phone))
+
+
+def change_client(conn, client_id, first_name=None, last_name=None, email=None, phones=None):
+    pass
+
+
+def delete_phone(conn, client_id, phone):
+    pass
+
+
+def delete_client(conn, client_id):
+    pass
+
+
+def find_client(conn, first_name=None, last_name=None, email=None, phone=None):
+    pass
+
+
+def clean_db(conn):
+    pass
+
+
+with psycopg2.connect(database="customer", user="postgres", password="120290Vova") as conn:
+    create_db(conn)
+    add_client(conn, 'John', 'Doe', 'unknown@strange.com')
+    add_phone(conn, '1', '123-45-67')
+
+conn.close()
